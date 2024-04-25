@@ -25,9 +25,9 @@ describe("Books route test", function() {
 
     describe("Posting new books", function(){
         test("Can post book", async function(){
-            let response = await request(app).post("/books/register")
+            let response = await request(app).post("/books/")
             .send({
-                "isbn": "0691161518",
+                "isbn": "0691161519",
                 "amazon_url": "http://a.co/eobPtX2",
                 "author": "Matthew Lane",
                 "language": "english",
@@ -36,18 +36,26 @@ describe("Books route test", function() {
                 "title": "Power-Up: Unlocking the Hidden Mathematics in Video Games",
                 "year": 2017
               })
+
+              expect(response.body).toEqual({
+                "book":{
+                    "isbn": "0691161519",
+                    "amazon_url": "http://a.co/eobPtX2",
+                    "author": "Matthew Lane",
+                    "language": "english",
+                    "pages": 264,
+                    "publisher": "Princeton University Press",
+                    "title": "Power-Up: Unlocking the Hidden Mathematics in Video Games",
+                    "year": 2017
+                }
+                
+            })
         })
 
-        expect(response.json.toEqual({
-            "isbn": "0691161518",
-            "amazon_url": "http://a.co/eobPtX2",
-            "author": "Matthew Lane",
-            "language": "english",
-            "pages": 264,
-            "publisher": "Princeton University Press",
-            "title": "Power-Up: Unlocking the Hidden Mathematics in Video Games",
-            "year": 2017
-        }))
+        
     })
 
+    afterAll(async function() {
+        await db.end();
+      });
 })

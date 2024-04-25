@@ -1,6 +1,8 @@
 const express = require("express");
 const Book = require("../models/book");
 const jsonschema = require("jsonschema")
+const bookSchema = require("../schemas/bookSchema.json")
+
 
 const router = new express.Router();
 
@@ -55,7 +57,7 @@ router.put("/:isbn", async function (req, res, next) {
       let listOfErrors = result.errors.map(error => error.stack)
       throw new ExpressError(listOfErrors, 400)
     }
-    
+
     const book = await Book.update(req.params.isbn, req.body);
     return res.json({ book });
   } catch (err) {
