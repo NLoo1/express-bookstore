@@ -1,6 +1,5 @@
 const request = require("supertest");
 const jsonschema = require("jsonschema");
-
 const app = require("../app");
 const db = require("../db");
 const Book = require("../models/book");
@@ -52,7 +51,44 @@ describe("Books route test", function() {
             })
         })
 
+        test("Rejects incomplete JSON", async function(){
+            let response = await request(app).post("/books/")
+            .send({
+                "isbn": "0691161519"
+              })
+
+              expect(response.statusCode).toBe(400)
+        })
         
+        test("Rejects incorrectly formatted JSON", async function(){
+            let response = await request(app).post("/books/")
+            .send({
+                "isbn": 123,
+                "amazon_url": 123,
+                "author": 123,
+                "language": 123,
+                "pages": "AAAAAA",
+                "publisher": 123,
+                "title": 123,
+                "year": "AAAAAA"
+              })
+
+              expect(response.statusCode).toBe(400)
+        })
+
+        
+    })
+
+    describe("GET /books", function(){
+        test("Get all books", async function(){
+            let response = await request(app).get('/books')
+
+            expect(response.body).toBe({
+                "books":{
+                    
+                }
+            })
+        })
     })
 
     afterAll(async function() {
